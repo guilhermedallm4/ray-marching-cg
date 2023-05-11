@@ -278,7 +278,7 @@ function main() {
   const playpauseElem = document.querySelector('.playpause');
   const inputElem = document.querySelector('.divcanvas');
   inputElem.addEventListener('mouseover', requestFrame);
-  inputElem.addEventListener('mouseout', cancelFrame);
+  //inputElem.addEventListener('mouseout', cancelFrame);
 
   let mouseX = 0;
   let mouseY = 0;
