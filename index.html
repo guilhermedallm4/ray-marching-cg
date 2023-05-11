@@ -1,0 +1,44 @@
+<!-- Licensed under a BSD license. See license.html for license -->
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>WebGL2 - Shadertoy</title>
+<style>
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.playpause {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 100%;
+  height: 100%;
+  font-size: 60px;
+  justify-content: center;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.3);
+  transition: opacity 0.2s ease-in-out;
+}
+
+.playpause:hover {
+  opacity: 0;
+}
+.iframe .divcanvas {
+  display: inline;
+}
+</style>
+</head>
+<body>
+<div class="divcanvas">
+  <canvas id="canvas"></canvas>
+  <div class="playpause"></div>
+</div>
+</body>
+<script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script>
+<script type="module" src="archive.js"></script>
+
+</html>
