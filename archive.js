@@ -23,22 +23,25 @@ uniform float iTime;
 // we need to declare an output for the fragment shader
 out vec4 outColor;
 
-// "ShaderToy Tutorial - Ray Marching for Dummies!" 
-// by Martijn Steinrucken aka BigWings/CountFrolic - 2018
-// License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
-//
-// This shader is part of a tutorial on YouTube
-// https://youtu.be/PGtv-dBi2wE
-
 #define MAX_STEPS 100
 #define MAX_DIST 100.
 #define SURFACE_DIST .01
+
+
+
 
 mat2 Rot(float a) {
     float s = sin(a);
     float c = cos(a);
     return mat2(c, -s, s, c);
+
+    /*
+retorna uma matriz 2x2 que representa uma rotação 2D no sentido 
+anti-horário por um ângulo a especificado em radianos. 
+A rotação é aplicada em torno da origem (0, 0). 
+*/
 }
+
 
 vec3 R(vec2 uv, vec3 p, vec3 l, float z) {
     vec3 f = normalize(l-p),
@@ -48,16 +51,16 @@ vec3 R(vec2 uv, vec3 p, vec3 l, float z) {
         i = c + uv.x*r + uv.y*u,
         d = normalize(i-p);
     return d;
-}
 
-float opSmoothUnion( float d1, float d2, float k ) {
-    float h = clamp( 0.5 + 0.5*(d2-d1)/k, 0.0, 1.0 );
-    return mix( d2, d1, h ) - k*h*(1.0-h); }
+    /*
+passa por uma determinada coordenada na tela definida pelos valores de uv.
+Essa função é usada para calcular o raio de visão em um sistema de renderização
+em tempo real.*/
+}
 
 float dBox(vec3 p, vec3 s){
         return length(max(abs(p)-s, 0.));
 }
-
 
 float sdBoxFrame( vec3 p, vec3 b, float e )
 {
@@ -73,7 +76,14 @@ float sdBoxFrame( vec3 p, vec3 b, float e )
 float smin(float a, float b, float k){
 	float h = clamp(0.5+0.5*(b-a)/k, 0., 1.);
 	return mix(b, a, h) - k*h*(1.0-h);
+  /*
+  calcular a distância assinada entre duas formas geométricas usando a operação de 
+  suavização de mínimo. Essa operação é usada para combinar as duas formas em uma 
+  única forma suavizada, onde a transição entre as formas é gradual em vez de abrupta.
+  */
 }
+
+
 float GetDist(vec3 p){
     float t = iTime;
 	float planeDist = p.y;
@@ -87,22 +97,28 @@ float GetDist(vec3 p){
     //Operação de subtração em duas formas diferentes e posteriormente unificação das mesmas.
     //Operaão de Subtração max(-a, b)
     //Operação de Intersecção max(a,b)
-    //Operação de União min(a,b4
+    //Operação de União min(a,b)
     
-    float sdB = length(p-vec3(-3,1,0))/.4;
     float sd = mix(bd, sdA, sin(iTime)*.5+.5);
     
    
-    
-    //float squash = 1.+smoothstep(.15, .0, y)*.5;
     float box = sdBoxFrame( p-vec3(-1, 2,0), vec3(4, 1, 5), 0.1)/.5;
+
+    /*
+    dividido por 0,5 para normalizá-lo para o intervalo [-1, 1]. Este valor normalizado é 
+    usado posteriormente para gerar a cor da superfície na posição "p" usando técnicas de ray marching.
+    */
+
     float d = min(sd, planeDist);
     d = min(d, box);
-    d = min(d, sdB);
+    
     
 
     return d;
-    
+    /*
+Esta é uma função usada em um shader de ray marching para calcular a
+distância da posição "p" até o objeto mais próximo na cena.
+*/
 }
 
 
@@ -128,7 +144,6 @@ LightVector = normalize(LightPos-SurfacePos)
 NormalVector = GetNormal(p)
 
 */
-
 vec3 GetNormal(vec3 p){
 	vec2 e = vec2(.03, 0);
 	float d = GetDist(p);
@@ -139,6 +154,14 @@ vec3 GetNormal(vec3 p){
 	);
 
 	return normalize(n);
+
+
+//função para calcular a normal de uma superfície em um ponto específico "p".
+/*Ela utiliza um método conhecido como "diferença finita" para aproximar a derivada da função de distância (GetDist) 
+em três direções diferentes. A ideia é deslocar o ponto "p" ligeiramente em cada direção e calcular a diferença de distância 
+entre o ponto original e o ponto deslocado. A normal é então calculada a partir dessas diferenças de distância, 
+usando-as como componentes do vetor normal.*/
+
 }
 
 float GetLight(vec3 p) {
@@ -151,17 +174,19 @@ float GetLight(vec3 p) {
     if(p.y<.01 && d<length(lightPos-p)) dif *= .5;
     
     return dif;
+    /*
+Essa função é usada para calcular a intensidade da luz em um ponto específico "p" 
+em um shader de ray marching.
+*/
 }
-
-
-
-
 
 
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
+    // ro = posição da câmera
+    // rd = direção do raio
     vec2 uv = (fragCoord-.5*iResolution.xy)/iResolution.y;
-	vec2 m = iMouse.xy/iResolution.xy;
+	  vec2 m = iMouse.xy/iResolution.xy;
     
     vec3 col = vec3(0);
     
