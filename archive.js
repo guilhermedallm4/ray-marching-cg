@@ -89,12 +89,12 @@ float GetDist(vec3 p){
 	float planeDist = p.y;
     
     vec3 bp = p;
-    bp -= vec3(-1, 2,0); // translação 
+    bp -= vec3(-1, 2,1); // translação 
     bp.xz *= Rot(iTime); // Rtação
     bp.yz*= Rot(iTime);  // Rotação
        
     float bd = dBox(bp, vec3(.75));
-    float sdA = length(p-vec3(-1,2,0))-1.;
+    float sdA = length(p-vec3(-1,2,0.9))-1.;
     //Operação de subtração em duas formas diferentes e posteriormente unificação das mesmas.
     //Operaão de Subtração max(-a, b)
     //Operação de Intersecção max(a,b)
@@ -103,8 +103,10 @@ float GetDist(vec3 p){
     float sd = mix(bd, sdA, sin(iTime)*.5+.5);
     
    
-    float box = sdBoxFrame( p-vec3(-1, 2,0), vec3(4, 1, 5), 0.1)/.5;
-
+    float box = sdBoxFrame( p-vec3(-1,2,0.5), vec3(2, 1, 3), 0.1)/.4;
+    float box_two = sdBoxFrame( p-vec3(-.5,1,0.8), vec3(2, 1, 3), 0.1)/.2;
+    float box_three = sdBoxFrame( p-vec3(-.3,3,0.2), vec3(2, 1, 3), 0.1)/.4;
+    float box_four = sdBoxFrame( p-vec3(-3,1,3), vec3(2, 1, 3), 0.1)/.1;
     /*
     dividido por 0,5 para normalizá-lo para o intervalo [-1, 1]. Este valor normalizado é 
     usado posteriormente para gerar a cor da superfície na posição "p" usando técnicas de ray marching.
@@ -112,7 +114,9 @@ float GetDist(vec3 p){
 
     float d = min(sd, planeDist);
     d = min(d, box);
-    
+    d = min(d, box_two);
+    d = min(d, box_three);
+    d = min(d, box_four);
     
 
     return d;
@@ -195,7 +199,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     ro.yz *= Rot(-m.y+.6);
     ro.xz *= Rot(iTime*.4);
     
-    vec3 rd = R(uv, ro, vec3(0,0,0), .7);
+    vec3 rd = R(uv, ro, vec3(0,1.5,0), .7);
 
     float d = RayMarch(ro, rd);
     
