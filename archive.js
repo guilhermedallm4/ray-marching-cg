@@ -23,6 +23,7 @@ uniform float iTime;
 // we need to declare an output for the fragment shader
 out vec4 outColor;
 
+
 #define MAX_STEPS 100
 #define MAX_DIST 100.
 #define SURFACE_DIST .01
@@ -103,10 +104,10 @@ float GetDist(vec3 p){
     float sd = mix(bd, sdA, sin(iTime)*.5+.5);
     
    
-    float box = sdBoxFrame( p-vec3(-1,2,0.5), vec3(2, 1, 3), 0.1)/.4;
-    float box_two = sdBoxFrame( p-vec3(-.5,1,0.8), vec3(2, 1, 3), 0.1)/.2;
-    float box_three = sdBoxFrame( p-vec3(-.3,3,0.2), vec3(2, 1, 3), 0.1)/.4;
-    float box_four = sdBoxFrame( p-vec3(-3,1,3), vec3(2, 1, 3), 0.1)/.1;
+    float box = sdBoxFrame( p-vec3(-1,2,0.5), vec3(5, 5.4, 3), 0.1)/.4;
+    float box_two = sdBoxFrame( p-vec3(-.5,1,0.8), vec3(2, 3, 3.3), 0.1)/.2;
+    float box_three = sdBoxFrame( p-vec3(-.3,3,0.2), vec3(1, 6, 3), 0.1)/.7;
+    float box_four = sdBoxFrame( p-vec3(-3,1,3), vec3(4, 4.5, 3), 0.1)/.5;
     /*
     dividido por 0,5 para normalizá-lo para o intervalo [-1, 1]. Este valor normalizado é 
     usado posteriormente para gerar a cor da superfície na posição "p" usando técnicas de ray marching.
