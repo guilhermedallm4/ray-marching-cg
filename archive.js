@@ -90,7 +90,8 @@ float GetDist(vec3 p){
     
     vec3 bp = p;
     bp -= vec3(-1, 2,0); // translação 
-    //bp.xz *= Rot(iTime); // rotação
+    bp.xz *= Rot(iTime); // Rtação
+    bp.yz*= Rot(iTime);  // Rotação
        
     float bd = dBox(bp, vec3(.75));
     float sdA = length(p-vec3(-1,2,0))-1.;
@@ -204,8 +205,8 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     	float dif = GetLight(p);
     	col = vec3(dif);
     }
-    
-    col = pow(col, vec3(.4545));	// gamma correction
+    col = pow(col, vec3(1, .54,23));
+    //col = pow(col, vec3(.4545));	
     
     fragColor = vec4(col,1.0);
 }
